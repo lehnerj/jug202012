@@ -1,0 +1,145 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'com.github.lehnerj.jug202012'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+apply plugin: 'java'
+
+task(runCpuCodeSample1ArrayList, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample1arraylist.CpuCodeArrayList'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args = ['--fix=false']
+}
+
+task(runCpuCodeSample1ArrayListDebugNonSafepoints, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample1arraylist.CpuCodeArrayList'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g', '-XX:+UnlockDiagnosticVMOptions', '-XX:+DebugNonSafepoints']
+    args = ['--fix=false']
+}
+
+task(runCpuCodeSample1ArrayListFixed, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample1arraylist.CpuCodeArrayList'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args = ['--fix=true']
+}
+
+task(runCpuCodeSample1ArrayListNoJit, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample1arraylist.CpuCodeArrayList'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g', '-Xint']
+    args '--fix=false'
+}
+
+task(runCpuCodeSample1ArrayListNoJitNoInline, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample1arraylist.CpuCodeArrayList'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xint', '-Xmx1g', '-XX:+UnlockDiagnosticVMOptions', '-XX:MaxInlineSize=0']
+    args '--fix=false'
+}
+
+// Buggy, we want 100 patterns but get around 10 per sec
+task(runCpuCodeSample2LoadTestLowLoadBuggy, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample2loadtest.CpuCodeJmxLoadTestingTool'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args = ['--patternsPerSec=100', '--fixCpuLock=false', '--fixCpuCodeReplaceAll=false', '--fixCpuDiskSleepIo=false', '--fixCpuDiskIo=false']
+}
+
+
+task(runCpuCodeSample2LoadTestHighLoadDiskSleepBuggy, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample2loadtest.CpuCodeJmxLoadTestingTool'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args = ['--patternsPerSec=1000', '--fixCpuLock=true', '--fixCpuCodeReplaceAll=false', '--fixCpuDiskSleepIo=false', '--fixCpuDiskIo=false']
+}
+
+task(runCpuCodeSample2LoadTestHighLoadDiskIoBuggy, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample2loadtest.CpuCodeJmxLoadTestingTool'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args = ['--patternsPerSec=1000', '--fixCpuLock=true', '--fixCpuCodeReplaceAll=false', '--fixCpuDiskSleepIo=true', '--fixCpuDiskIo=false']
+}
+
+task(runCpuCodeSample2LoadTestHighLoadFixed, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.code.sample2loadtest.CpuCodeJmxLoadTestingTool'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args = ['--patternsPerSec=1000', '--fixCpuLock=true', '--fixCpuCodeReplaceAll=true', '--fixCpuDiskSleepIo=true', '--fixCpuDiskIo=true']
+}
+
+task(runCpuDiskSample1TenantStartupEmptyDirLinux, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.disk.CpuDiskLongStartupDuration'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args '--folder=C:\\workspaces\\workOctober\\'
+}
+
+// TODO mkdir /home/ec2-user/tmp-files-for-cpudisklongstartupduration
+// TODO create folders with name tenant-xyz (e.g. 1-100, tenant-1, tenant-2) with lots of data
+task(runCpuDiskSample1TenantStartupFullDirLinux, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.disk.CpuDiskLongStartupDuration'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args '--folder=/home/ec2-user/tmp-files-for-cpudisklongstartupduration'
+}
+
+task(runCpuWaitSample1TenantStartupGeoServer, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.waitnetwork.geoserver.GeoServer'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+}
+
+task(runCpuWaitSample1TenantStartupMainNeedsGeoServer, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.cpu.waitnetwork.CpuWaitNetworkLongStartupDuration'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+}
+
+task(runDemoApp1AttributeServiceLock, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.slowallocpulockdemoapp.MyAttributeApp'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args "--spring.profiles.active=lock"
+}
+
+task(runDemoApp1AttributeServiceHighMem, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.slowallocpulockdemoapp.MyAttributeApp'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+    args "--spring.profiles.active=highmem"
+}
+
+task(runDemoApp1AttributeServiceFixed, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.lehnerj.jug202012.slowallocpulockdemoapp.MyAttributeApp'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-server', '-Xmx1g']
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.google.guava:guava:30.0-jre")
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    implementation('org.springframework.boot:spring-boot-starter-jetty')
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,261 @@
+{
+  "version": "0.10",
+  "name": "custom.jmx.example.selfmonitoring.loadtest",
+  "metricGroup": "custom.jmx.example.selfmonitoring.loadtest",
+  "type": "JMX",
+  "entity": "PROCESS_GROUP_INSTANCE",
+  "processTypes": [
+    10
+  ],
+  "configUI": {
+    "displayName": "Example LoadTest Self-Monitoring"
+  },
+  "metrics": [
+    {
+      "timeseries": {
+        "key": "PatternsPerSec",
+        "unit": "Count",
+        "dimensions": [
+          "rx_pid"
+        ],
+        "displayname": "Patterns/sec"
+      },
+      "source": {
+        "domain": "com.example.loadtest",
+        "keyProperties": {
+          "name": "LoadTesting Statistics"
+        },
+        "allowAdditionalKeys": false,
+        "attribute": "PatternsGeneratedCount",
+        "calculateDelta": true,
+        "calculateRate": true,
+        "aggregation": "SUM"
+      }
+    },
+    {
+      "timeseries": {
+        "key": "MaxBehindSchedule",
+        "unit": "Count",
+        "dimensions": [
+          "rx_pid"
+        ],
+        "displayname": "MaxBehindSchedule (msec)"
+      },
+      "source": {
+        "domain": "com.example.loadtest",
+        "keyProperties": {
+          "name": "LoadTesting Statistics"
+        },
+        "allowAdditionalKeys": false,
+        "attribute": "MaxBehindSchedule",
+        "calculateDelta": false,
+        "calculateRate": false,
+        "aggregation": "SUM"
+      }
+    },
+    {
+      "timeseries": {
+        "key": "DispatcherThreadQueueSize",
+        "unit": "Count",
+        "dimensions": [
+          "rx_pid"
+        ],
+        "displayname": "MessageDispatcherThread - queue size"
+      },
+      "source": {
+        "domain": "com.example.queue",
+        "keyProperties": {
+          "name": "Queue Statistics - Stage-2-Dispatcher"
+        },
+        "allowAdditionalKeys": false,
+        "attribute": "QueueSize",
+        "calculateDelta": false,
+        "calculateRate": false,
+        "aggregation": "SUM"
+      }
+    },
+    {
+      "timeseries": {
+        "displayname": "ActiveThreadCount",
+        "key": "ActiveThreadCount",
+        "unit": "Count",
+        "dimensions": [
+          "rx_pid"
+        ]
+      },
+      "source": {
+        "domain": "com.example.threadpools",
+        "keyProperties": {
+          "name": "Thread Pool Statistics - Stage-2-DiskWriter"
+        },
+        "allowAdditionalKeys": false,
+        "attribute": "ActiveThreadsOfThreadPool",
+        "calculateDelta": false,
+        "calculateRate": false,
+        "aggregation": "SUM"
+      }
+    },
+    {
+      "timeseries": {
+        "displayname": "MaxSizeOfThreadPool",
+        "key": "MaxSizeOfThreadPool",
+        "unit": "Count",
+        "dimensions": [
+          "rx_pid"
+        ]
+      },
+      "source": {
+        "domain": "com.example.threadpools",
+        "keyProperties": {
+          "name": "Thread Pool Statistics - Stage-2-DiskWriter"
+        },
+        "allowAdditionalKeys": false,
+        "attribute": "MaxSizeOfThreadPool",
+        "calculateDelta": false,
+        "calculateRate": false,
+        "aggregation": "SUM"
+      }
+    },
+    {
+      "timeseries": {
+        "displayname": "QueueSizeOfThreadPool",
+        "key": "QueueSizeOfThreadPool",
+        "unit": "Count",
+        "dimensions": [
+          "rx_pid"
+        ]
+      },
+      "source": {
+        "domain": "com.example.threadpools",
+        "keyProperties": {
+          "name": "Thread Pool Statistics - Stage-2-DiskWriter"
+        },
+        "allowAdditionalKeys": false,
+        "attribute": "QueueSizeOfThreadPool",
+        "calculateDelta": false,
+        "calculateRate": false,
+        "aggregation": "SUM"
+      }
+    }
+  ],
+  "ui": {
+    "keymetrics": [
+      {
+        "key": "PatternsPerSec",
+        "displayname": "Patterns / sec",
+        "mergeaggregation": "sum"
+      },
+      {
+        "key": "MaxBehindSchedule",
+        "displayname": "Max Behind Schedule / msec",
+        "mergeaggregation": "sum"
+      },
+      {
+        "key": "DispatcherThreadQueueSize",
+        "displayname": "DispatcherThread - queue size",
+        "mergeaggregation": "sum"
+      }
+    ],
+    "keycharts": [
+      {
+        "title": "Load",
+        "group": "LoadTest Overview",
+        "series": [
+          {
+            "key": "PatternsPerSec",
+            "displayname": "Patterns/sec",
+            "rightaxis": true,
+            "color": "rgba(101,152,186,0.4)",
+            "seriestype": "bar",
+            "mergeaggregation": "sum"
+          }
+        ]
+      },
+      {
+        "title": "Behind Schedule",
+        "group": "LoadTest Overview",
+        "series": [
+          {
+            "key": "MaxBehindSchedule",
+            "displayname": "msec",
+            "rightaxis": true,
+            "color": "rgba(101,152,186,0.4)",
+            "seriestype": "bar",
+            "mergeaggregation": "sum"
+          }
+        ]
+      },
+      {
+        "title": "Dispatcher Thread Queue Size",
+        "group": "LoadTest Overview",
+        "series": [
+          {
+            "key": "DispatcherThreadQueueSize",
+            "displayname": "size",
+            "rightaxis": true,
+            "color": "rgba(101,152,186,0.4)",
+            "seriestype": "bar",
+            "mergeaggregation": "sum"
+          }
+        ]
+      },
+      {
+        "group": "LoadTest Overview",
+        "title": "Thread Pool - Disk Writer",
+        "description": "The dispatcher disk write thread pool",
+        "explanation": "",
+        "link": "",
+        "series": [
+          {
+            "key": "ActiveThreadCount",
+            "displayname": "Active Threads (max)",
+            "aggregation": "max",
+            "mergeaggregation": "avg",
+            "color": "#82d8f9",
+            "seriestype": "bar",
+            "rightaxis": false,
+            "stacked": false,
+            "unit": "Count",
+            "metricexplanation": ""
+          },
+          {
+            "key": "ActiveThreadCount",
+            "displayname": "Active Threads (avg)",
+            "aggregation": "avg",
+            "mergeaggregation": "avg",
+            "color": "#008cdb",
+            "seriestype": "bar",
+            "rightaxis": false,
+            "stacked": false,
+            "unit": "Count",
+            "metricexplanation": ""
+          },
+          {
+            "key": "MaxSizeOfThreadPool",
+            "displayname": "Pool Max Threads",
+            "aggregation": "avg",
+            "mergeaggregation": "avg",
+            "color": "#b4e5f9",
+            "seriestype": "area",
+            "rightaxis": false,
+            "stacked": false,
+            "unit": "Count",
+            "metricexplanation": ""
+          },
+          {
+            "key": "QueueSizeOfThreadPool",
+            "displayname": "Pool Queue Size",
+            "aggregation": "avg",
+            "mergeaggregation": "avg",
+            "color": "#003a8a",
+            "seriestype": "line",
+            "rightaxis": true,
+            "stacked": false,
+            "unit": "Count",
+            "metricexplanation": ""
+          }
+        ]
+      }
+    ]
+  }
+}
